@@ -32,19 +32,29 @@ describe('Home page', () => {
     homeServiceStub = {
       getMachines: () => Observable.of([{
         id: 'id_1',
+        name: 'Bob',
         running: false,
         status: 'normal',
         room_id: 'room_a',
         type: 'washer',
+        position: {
+          x:0,
+          y:0
+        },
 
         remainingTime: -1,
         vacantTime: 10,
       }, {
         id: 'string',
+        name: 'Geroge',
         running: false,
         status: 'normal',
         room_id: 'room_b',
         type: 'dryer',
+        position: {
+          x:0,
+          y:0
+        },
 
         remainingTime: 10,
         vacantTime: -1,

@@ -10,30 +10,45 @@ describe('Home list Service', () => {
   const testMachines: Machine[] = [
     {
       id: 'bf354528bwhsg',
+      name: 'Bob',
       running: false,
       status: 'normal',
       room_id: 'room_a',
       type: 'washer',
+      position: {
+        x:0,
+        y:0
+      },
 
       remainingTime: null,
       vacantTime: null,
     },
     {
       id: '67gsafy908c',
+      name: 'Geroge',
       running: true,
       status: 'normal',
       room_id: 'room_a',
       type: 'dryer',
+      position: {
+        x:0,
+        y:0
+      },
 
       remainingTime: null,
       vacantTime: null,
     },
     {
       id: 'ng6755jsg78',
+      name: 'Jerob',
       running: false,
       status: 'broken',
       room_id: 'room_b',
       type: 'washer',
+      position: {
+        x:0,
+        y:0
+      },
 
       remainingTime: null,
       vacantTime: null,
@@ -134,30 +149,45 @@ describe('Home list Service', () => {
     const updatedMachines: Machine[] = [
       {
         id: 'bf354528bwhsg',
+        name: 'Bob',
         running: true,
         status: 'normal',
         room_id: 'room_a',
         type: 'washer',
+        position: {
+          x:0,
+          y:0
+        },
 
         remainingTime: 100,
         vacantTime: -1,
       },
       {
         id: '67gsafy908c',
+        name: 'Geroge',
         running: false,
         status: 'normal',
         room_id: 'room_a',
         type: 'dryer',
+        position: {
+          x:0,
+          y:0
+        },
 
         remainingTime: -1,
         vacantTime: 10,
       },
       {
         id: 'ng6755jsg78',
+        name: 'Jerob',
         running: false,
         status: 'broken',
         room_id: 'room_b',
         type: 'washer',
+        position: {
+          x:0,
+          y:0
+        },
 
         remainingTime: 34,
         vacantTime: -1,
