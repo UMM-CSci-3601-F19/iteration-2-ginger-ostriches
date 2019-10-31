@@ -28,7 +28,8 @@ export class AppService {
     };
   }
 
-  /*  this.http.post(environment.API_URL + 'login', {code: code}, httpOptions).subscribe(onSuccess => {
+    /*this.http.post(environment.API_URL + 'login', {code: code}, httpOptions)
+    .subscribe(onSuccess => {
     console.log('Code sent to server');
     console.log(onSuccess);
     localStorage.setItem('_id', onSuccess['_id']);
@@ -51,8 +52,10 @@ export class AppService {
     console.log(localStorage.getItem('pictureUrl'));
 
   }, onFail => {
-    console.log('ERROR: Code couldn't be sent to the server'');
-  });*/
+    console.log("ERROR: Code couldn't be sent to the server");
+  });
+  }*/
+
 
   signIn() {
     this.googleAuth = gapi.auth2.getAuthInstance();

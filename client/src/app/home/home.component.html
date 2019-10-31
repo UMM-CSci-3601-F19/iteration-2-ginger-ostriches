@@ -4,6 +4,13 @@
 
     <div *ngIf="!appService.isSignedIn()" class="g-signin2" (click)="signIn()"></div>
 
+    <script>
+      $('#signinButton').click(function() {
+        // signInCallback defined in step 6.
+        auth2.grantOfflineAccess().then(signInCallback);
+      });
+    </script>
+
     <mat-expansion-panel [expanded]="selectorState === 0" (opened)="setSelector(0)">
 
       <mat-expansion-panel-header>

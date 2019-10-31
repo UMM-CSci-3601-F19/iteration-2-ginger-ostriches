@@ -2,7 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {Room} from './room';
 import {Machine} from './machine';
 import {Observable} from 'rxjs';
-import {HomeService} from './home.service';
+import {HomeService} from './home.service'
+
+
 
 @Component({
   templateUrl: 'home.component.html',

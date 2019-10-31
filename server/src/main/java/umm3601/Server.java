@@ -11,8 +11,20 @@ import umm3601.laundry.LaundryRequestHandler;
 import umm3601.user.UserController;
 import umm3601.user.UserRequestHandler;
 
-import static spark.Spark.*;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
+
+
+
+import static spark.Spark.*;
+
+
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import org.json.*;
 
 public class Server {
   private static final String userDatabaseName = "dev";
@@ -106,6 +118,73 @@ public class Server {
       res.status(404);
       return "Sorry, we couldn't find that!";
     });
+
+    post("api/login", (req, res) -> {
+
+      JSONObject obj = new JSONObject(req.body());
+      String authCode = obj.getString("code");
+
+      try {
+
+        String CLIENT_SECRET_FILE = "./src/main/java/umm3601/server_files/credentials.json";
+
+
+        GoogleClientSecrets clientSecrets =
+          GoogleClientSecrets.load(
+            JacksonFactory.getDefaultInstance(), new FileReader(CLIENT_SECRET_FILE));
+
+
+        GoogleTokenResponse tokenResponse =
+          new GoogleAuthorizationCodeTokenRequest(
+            new NetHttpTransport(),
+            JacksonFactory.getDefaultInstance(),
+            "https://oauth2.googleapis.com/token",
+            clientSecrets.getDetails().getClientId(),
+
+            // Replace clientSecret with the localhost one if testing
+            clientSecrets.getDetails().getClientSecret(),
+            authCode,
+            "http://localhost:9000")
+            //Not sure if we have a redirectUri
+
+            // Specify the same redirect URI that you use with your web
+            // app. If you don't have a web version of your app, you can
+            // specify an empty string.
+            .execute();
+
+
+        // Get profile info from ID token
+        GoogleIdToken idToken = tokenResponse.parseIdToken();
+        GoogleIdToken.Payload payload = idToken.getPayload();
+        String userId = payload.getSubject();     // Use this value as a key to identify a user.
+        String email = payload.getEmail();
+        boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+        String name = (String) payload.get("name");
+        String pictureUrl = (String) payload.get("picture");
+        String locale = (String) payload.get("locale");
+        String familyName = (String) payload.get("family_name");
+        String givenName = (String) payload.get("given_name");
+
+        // Debugging Code
+        System.out.println("---------------------------");
+        System.out.println("UserID is " + userId);
+        System.out.println("Email is " + email);
+        System.out.println("Is Email verified? " + emailVerified);
+        System.out.println("Name is " + name);
+        System.out.println("Picture Url is " + pictureUrl);
+        System.out.println("Locale is " + locale);
+        System.out.println("familyName is " + familyName);
+        System.out.println("givenName is " + givenName);
+        System.out.println("---------------------------");
+
+        return userController.addNewUser(userId, email, name, pictureUrl, familyName, givenName);
+
+      } catch (Exception e) {
+        System.out.println(e);
+      }
+
+      return "";
+    });
   }
 
   // Enable GZIP for all responses
@@ -113,3 +192,4 @@ public class Server {
     response.header("Content-Encoding", "gzip");
   }
 }
+

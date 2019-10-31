@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" itemscope itemtype="http://schema.org/Article">
 <head>
   <meta charset="utf-8">
   <title>The Web App</title>
@@ -30,12 +30,7 @@
 <app-root class="mdc-typography">Loading the web app ......</app-root>
 <noscript>Please enable JavaScript to continue using this application.</noscript>
 
-<script>
-    $('#signinButton').click(function() {
-        // signInCallback defined in step 6.
-        auth2.grantOfflineAccess().then(signInCallback);
-    });
-</script>
+
 
 
 <script>
@@ -64,4 +59,29 @@
         }}
 </script>
 </body>
+<script>
+  function signInCallback(authResult) {
+    if (authResult['code']) {
+// Hide the sign-in button now that the user is authorized, for example:
+      $('#signinButton').attr('style', 'display: none');
+
+      // Send the code to the server
+      $.ajax({
+          type: 'POST',
+          url: 'http://example.com/storeauthcode',
+        // Always include an `X-Requested-With` header in every AJAX request,
+        // to protect against CSRF attacks.
+        headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      contentType: 'application/octet-stream; charset=utf-8',
+        success: function(result) {
+        // Handle or verify the server response.
+      },      processData: false,
+        data: authResult['code']
+    });
+    } else {
+      // There was an error.
+    }}
+</script>
 </html>
