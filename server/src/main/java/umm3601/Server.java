@@ -32,15 +32,15 @@ public class Server {
     MongoDatabase machinePollingDatabase = mongoClient.getDatabase(machinePollingDatabaseName);
     MongoDatabase roomDatabase = mongoClient.getDatabase(roomDatabaseName);
 
-//    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-//    executorService.scheduleAtFixedRate(new Runnable() {
-//      @Override
-//      public void run() {
-//        pollFromServer(mongoClient);
-//      }
-//    }, 0, 1, TimeUnit.MINUTES);
+    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    executorService.scheduleAtFixedRate(new Runnable() {
+      @Override
+      public void run() {
+        pollFromServer(mongoClient);
+      }
+    }, 0, 1, TimeUnit.MINUTES);
 
-    pollFromServer(mongoClient);
+
 
     UserController userController = new UserController(userDatabase);
     UserRequestHandler userRequestHandler = new UserRequestHandler(userController);
@@ -121,7 +121,7 @@ public class Server {
   }
 
   private static void pollFromServer(MongoClient mongoClient) {
-//    mongoClient.dropDatabase("dev");
+    mongoClient.dropDatabase("dev");
     PollingService pollingService = new PollingService(mongoClient);
   }
 
