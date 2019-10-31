@@ -5,6 +5,22 @@
   <title>The Web App</title>
   <base href="/">
 
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+  <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
+  </script>
+  <script>
+      function start() {
+          gapi.load('auth2', function() {
+              auth2 = gapi.auth2.init({
+                  client_id: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
+                  // Scopes to request in addition to 'profile' and 'email'
+                  //scope: 'additional_scope'
+              });
+          });
+      }
+  </script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -13,5 +29,39 @@
 <body>
 <app-root class="mdc-typography">Loading the web app ......</app-root>
 <noscript>Please enable JavaScript to continue using this application.</noscript>
+
+<script>
+    $('#signinButton').click(function() {
+        // signInCallback defined in step 6.
+        auth2.grantOfflineAccess().then(signInCallback);
+    });
+</script>
+
+
+<script>
+    function signInCallback(authResult) {
+        if (authResult['code']) {
+// Hide the sign-in button now that the user is authorized, for example:
+            $('#signinButton').attr('style', 'display: none');
+
+            // Send the code to the server
+            $.ajax({
+                    type: 'POST',
+                    url: 'http://example.com/storeauthcode',
+                // Always include an `X-Requested-With` header in every AJAX request,
+                // to protect against CSRF attacks.
+                headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            contentType: 'application/octet-stream; charset=utf-8',
+                success: function(result) {
+                // Handle or verify the server response.
+            },      processData: false,
+                data: authResult['code']
+        });
+        } else {
+            // There was an error.
+        }}
+</script>
 </body>
 </html>
