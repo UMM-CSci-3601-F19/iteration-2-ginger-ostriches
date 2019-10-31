@@ -32,20 +32,20 @@ public class Server {
     MongoDatabase machinePollingDatabase = mongoClient.getDatabase(machinePollingDatabaseName);
     MongoDatabase roomDatabase = mongoClient.getDatabase(roomDatabaseName);
 
+//    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+//    executorService.scheduleAtFixedRate(new Runnable() {
+//      @Override
+//      public void run() {
+//        pollFromServer(mongoClient);
+//      }
+//    }, 0, 1, TimeUnit.MINUTES);
+
+    pollFromServer(mongoClient);
+
     UserController userController = new UserController(userDatabase);
     UserRequestHandler userRequestHandler = new UserRequestHandler(userController);
     LaundryController laundryController = new LaundryController(machineDatabase, roomDatabase, machinePollingDatabase);
     LaundryRequestHandler laundryRequestHandler = new LaundryRequestHandler(laundryController);
-
-
-    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    executorService.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        pollFromServer(mongoClient);
-      }
-    }, 0, 1, TimeUnit.MINUTES);
-//    pollFromServer(mongoClient);
 
     //Configure Spark
     port(serverPort);
@@ -120,16 +120,14 @@ public class Server {
     });
   }
 
+  private static void pollFromServer(MongoClient mongoClient) {
+//    mongoClient.dropDatabase("dev");
+    PollingService pollingService = new PollingService(mongoClient);
+  }
+
+
   // Enable GZIP for all responses
   private static void addGzipHeader(Request request, Response response) {
     response.header("Content-Encoding", "gzip");
   }
-
-  private static void pollFromServer(MongoClient mongoClient) {
-    mongoClient.dropDatabase("dev");
-    PollingService pollingService = new PollingService(mongoClient);
-  }
-
 }
-
-
