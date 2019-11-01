@@ -20,8 +20,10 @@ import java.io.InputStream;
 import static spark.Spark.*;
 
 
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.auth.oauth2.Credential;
+
+
+
+import com.google.api.client.googleapis.auth.oauth2.*;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import org.json.*;
@@ -78,6 +80,12 @@ public class Server {
       return IOUtils.toString(stream);
     };
 
+    Route notFoundRoute = (req, res) -> {
+      res.type("text");
+      res.status(404);
+      return "Sorry, we couldn't find that!";
+    };
+
     get("/", clientRoute);
 
     /// Endpoints ///////////////////////////////
@@ -95,7 +103,6 @@ public class Server {
 
     get("api/users", userRequestHandler::getUsers);
     get("api/users/:id", userRequestHandler::getUserJSON);
-    post("api/users/new", userRequestHandler::addNewUser);
 
     // An example of throwing an unhandled exception so you can see how the
     // Java Spark debugger displays errors like this.
@@ -185,6 +192,24 @@ public class Server {
 
       return "";
     });
+    get("api/error", (req, res) -> {
+      throw new RuntimeException("A demonstration error");
+    });
+
+    // Called after each request to insert the GZIP header into the response.
+    // This causes the response to be compressed _if_ the client specified
+    // in their request that they can accept compressed responses.
+    // There's a similar "before" method that can be used to modify requests
+    // before they they're processed by things like `get`.
+    after("*", Server::addGzipHeader);
+
+
+    get("api/*", notFoundRoute);
+
+    get("/*", clientRoute);
+
+    // Handle "404" file not found requests:
+    notFound(notFoundRoute);
   }
 
   // Enable GZIP for all responses
