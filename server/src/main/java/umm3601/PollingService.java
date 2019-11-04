@@ -98,40 +98,44 @@ class PollingService {
 
     BsonArray theArray = BsonArray.parse(responseData);
     Iterator<BsonValue> bsonValues = theArray.iterator();
+    if (machineDataFromPollingAPICollection.count() == 0) {
+
     System.out.println("THE ARRAY OF DATA IS THIS MANY ITEMS:" + theArray.size());
 
-    while (bsonValues.hasNext()) {
-      BsonDocument thisDocument = bsonValues.next().asDocument();
-      System.out.println(thisDocument);
+      while (bsonValues.hasNext()) {
+        BsonDocument thisDocument = bsonValues.next().asDocument();
+        System.out.println(thisDocument);
 
-      Document d = new Document();
-      for (Map.Entry<String, BsonValue> e : thisDocument.entrySet()) {
-        d.append(e.getKey(), e.getValue());
+        Document d = new Document();
+        for (Map.Entry<String, BsonValue> e : thisDocument.entrySet()) {
+          d.append(e.getKey(), e.getValue());
+        }
+        //It would probably be better to use the timestamp of the database, but this might make it easier to index
+        d.append("timestamp", "" + Time.nanoTime());
+        machineDataFromPollingAPICollection.insertOne(d);
       }
-      //It would probably be better to use the timestamp of the database, but this might make it easier to index
-      d.append("timestamp", "" + Time.nanoTime());
-      machineDataFromPollingAPICollection.insertOne(d);
+      return;
     }
   }
-
   private void updateAllRoomData(String responseData) {
 
     BsonArray theArray = BsonArray.parse(responseData);
     Iterator<BsonValue> bsonValues = theArray.iterator();
+    if (roomDataFromPollingAPICollection.count() == 0) {
     System.out.println("THE ARRAY OF DATA IS THIS MANY ITEMS:" + theArray.size());
+      while (bsonValues.hasNext()) {
+        BsonDocument thisDocument = bsonValues.next().asDocument();
+        System.out.println(thisDocument);
 
-    while (bsonValues.hasNext()) {
-      BsonDocument thisDocument = bsonValues.next().asDocument();
-      System.out.println(thisDocument);
-
-      Document d = new Document();
-      for (Map.Entry<String, BsonValue> e : thisDocument.entrySet()) {
-        d.append(e.getKey(), e.getValue());
+        Document d = new Document();
+        for (Map.Entry<String, BsonValue> e : thisDocument.entrySet()) {
+          d.append(e.getKey(), e.getValue());
+        }
+        //It would probably be better to use the timestamp of the database, but this might make it easier to index
+        d.append("timestamp", "" + Time.nanoTime());
+        roomDataFromPollingAPICollection.insertOne(d);
       }
-      //It would probably be better to use the timestamp of the database, but this might make it easier to index
-      d.append("timestamp", "" + Time.nanoTime());
-      roomDataFromPollingAPICollection.insertOne(d);
+      return;
     }
   }
-
 }
