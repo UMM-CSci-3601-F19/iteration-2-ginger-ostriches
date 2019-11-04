@@ -2,9 +2,9 @@
   <div flex-gt-sm="80" flex-offset-gt-sm="10">
     <a href="https://docs.google.com/a/morris.umn.edu/forms/d/e/1FAIpQLSdU04E9Kt5LVv6fVSzgcNQj1YzWtWu8bXGtn7jhEQIsqMyqIg/viewform?embedded=true&formkey=dFVZRllPTkVvMThzWWRtbkgwbmJsVWc6MQ"> Machine Broken? Click here to report it!</a>
 
-<!--    <div class="g-signin2" data-onsuccess="onSignIn"></div>-->
+<!--<div class="g-signin2" data-onsuccess="onSignIn"></div>-->
 
-        <div id="signIn" class="g-signin2" (click)="appService.signIn()"></div>
+ <div id="signIn" class="g-signin2" data-onsuccess="onSignIn" (click)="appService.signIn()"></div>
 
     <mat-expansion-panel [expanded]="selectorState === 0" (opened)="setSelector(0)">
 
