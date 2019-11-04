@@ -13,6 +13,8 @@ import {APP_BASE_HREF} from '@angular/common';
 import {CustomModule} from './custom.module';
 import {AddUserComponent} from './users/add-user.component';
 import {MatGridListModule} from "@angular/material/grid-list";
+import {AppService} from './app.service';
+import {AppAuthGuard} from './app.authGuard';
 
 // import {ScrollDispatchModule} from '@angular/cdk/scrolling';
 // import {CdkStepperModule} from '@angular/cdk/stepper';
@@ -39,6 +41,8 @@ import {MatGridListModule} from "@angular/material/grid-list";
     HttpClient,
     UserListService,
     HomeService,
+    AppService,
+    AppAuthGuard,
     {provide: APP_BASE_HREF, useValue: '/'},
   ],
   entryComponents: [

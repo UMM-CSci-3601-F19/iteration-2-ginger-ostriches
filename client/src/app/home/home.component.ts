@@ -2,16 +2,18 @@ import {Component, OnInit} from '@angular/core';
 import {Room} from './room';
 import {Machine} from './machine';
 import {Observable} from 'rxjs';
-import {HomeService} from './home.service'
-
+import {HomeService} from './home.service';
+import {AppService} from '../app.service';
 
 
 @Component({
   templateUrl: 'home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  providers: [AppService]
 })
 
 export class HomeComponent implements OnInit {
+
 
   /*
    * This is a switch for the E2E test
@@ -35,6 +37,7 @@ export class HomeComponent implements OnInit {
   public roomId: string;
   public roomName: string;
   public selectorState: number;
+  appService: AppService;
 
   constructor(public homeService: HomeService) {
     this.machineListTitle = 'available within all rooms';

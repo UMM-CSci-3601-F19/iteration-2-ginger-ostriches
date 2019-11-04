@@ -115,16 +115,9 @@ public class Server {
     // in their request that they can accept compressed responses.
     // There's a similar "before" method that can be used to modify requests
     // before they they're processed by things like `get`.
-    after("*", Server::addGzipHeader);
 
-    get("/*", clientRoute);
 
-    // Handle "404" file not found requests:
-    notFound((req, res) -> {
-      res.type("text");
-      res.status(404);
-      return "Sorry, we couldn't find that!";
-    });
+
 
     post("api/login", (req, res) -> {
 
@@ -191,6 +184,7 @@ public class Server {
       }
 
       return "";
+
     });
     get("api/error", (req, res) -> {
       throw new RuntimeException("A demonstration error");
@@ -208,8 +202,13 @@ public class Server {
 
     get("/*", clientRoute);
 
+
     // Handle "404" file not found requests:
-    notFound(notFoundRoute);
+    notFound((req, res) -> {
+      res.type("text");
+      res.status(404);
+      return "Sorry, we couldn't find that!";
+    });
   }
 
   // Enable GZIP for all responses
