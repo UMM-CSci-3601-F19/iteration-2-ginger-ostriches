@@ -11,9 +11,9 @@
         Home
       </mat-list-item>
 
-      <mat-list-item href="#" routerLink="/users" routerLinkActive="drawer-list-item-active" (click)="drawer.close()">
+      <mat-list-item href="#" routerLink="/user" routerLinkActive="drawer-list-item-active" (click)="drawer.close()">
         <mat-icon matListIcon>people</mat-icon>
-        Users
+        Dare you to click me
       </mat-list-item>
 
     </mat-nav-list>
@@ -27,7 +27,7 @@
         (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon" class="menuLabel">menu</mat-icon>
       </button>
-      <span class="app-title">THE WEB APP</span>
+      <span class="app-title">Morris Laundry Page</span>
     </mat-toolbar>
     <div class="main-content mat-typography">
       <router-outlet></router-outlet>
