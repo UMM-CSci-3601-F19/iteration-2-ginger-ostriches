@@ -12,6 +12,7 @@ import umm3601.user.UserController;
 import umm3601.user.UserRequestHandler;
 
 import static spark.Spark.*;
+
 import java.io.InputStream;
 
 public class Server {
