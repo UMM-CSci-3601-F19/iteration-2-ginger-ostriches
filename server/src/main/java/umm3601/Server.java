@@ -32,20 +32,18 @@ public class Server {
     MongoDatabase machinePollingDatabase = mongoClient.getDatabase(machinePollingDatabaseName);
     MongoDatabase roomDatabase = mongoClient.getDatabase(roomDatabaseName);
 
-    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    executorService.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        pollFromServer(mongoClient);
-      }
-    }, 0, 1, TimeUnit.MINUTES);
-
-
-
     UserController userController = new UserController(userDatabase);
     UserRequestHandler userRequestHandler = new UserRequestHandler(userController);
     LaundryController laundryController = new LaundryController(machineDatabase, roomDatabase, machinePollingDatabase);
     LaundryRequestHandler laundryRequestHandler = new LaundryRequestHandler(laundryController);
+
+    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    executorService.scheduleAtFixedRate(new Runnable() {
+      @Override
+      public void run() {
+        pollFromServer(mongoClient, laundryController);
+      }
+    }, 0, 1, TimeUnit.MINUTES);
 
     //Configure Spark
     port(serverPort);
@@ -120,9 +118,14 @@ public class Server {
     });
   }
 
-  private static void pollFromServer(MongoClient mongoClient) {
-    mongoClient.dropDatabase("dev");
-    PollingService pollingService = new PollingService(mongoClient);
+  private static void pollFromServer(MongoClient mongoClient, LaundryController laundryController) {
+
+    if (mongoClient.getDatabase(machineDatabaseName).getCollection("machineDataFromPollingAPI").countDocuments() == 0) {
+      PollingService pollingService = new PollingService(mongoClient);
+    } else {
+      laundryController.updateMachines();
+    }
+    //mongoClient.dropDatabase(machineDatabaseName);
   }
 
 

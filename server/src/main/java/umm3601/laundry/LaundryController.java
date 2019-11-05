@@ -75,7 +75,7 @@ public class LaundryController {
     }
   }
 
-  private void updateMachines() {
+  public void updateMachines() {
 
     if (!seedLocalSource){
       machinePollingCollection = pullingDatabase.getCollection("machineDataFromPollingAPI");
