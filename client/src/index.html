@@ -4,63 +4,18 @@
   <meta charset="utf-8">
   <title>The Web App</title>
   <base href="/">
-  <meta name="google-signin-client_id" content="121498793046-vuuo0thmp21gmnskaei3330bq50ni6s7.apps.googleusercontent.com">
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
-
-
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
-  </script>
-  <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
-  </script>
-  <script>
-      function start() {
-          gapi.load('auth2', function() {
-              auth2 = gapi.auth2.init({
-                  client_id: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
-                  // Scopes to request in addition to 'profile' and 'email'
-                  //scope: 'additional_scope'
-              });
-          });
-      }
-  </script>
+  <meta name="google-signin-client_id" content="824632109956-7oc5g0ereu6rqhqoikqsg2nu92g48v4e.apps.googleusercontent.com">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+
+  <script src="https://apis.google.com/js/platform.js"></script>
 </head>
 <body>
 <app-root class="mdc-typography">Loading the web app ......</app-root>
 <noscript>Please enable JavaScript to continue using this application.</noscript>
-
-
-
-
-<script>
-    function signInCallback(authResult) {
-        if (authResult['code']) {
-// Hide the sign-in button now that the user is authorized, for example:
-            $('#signinButton').attr('style', 'display: none');
-
-            // Send the code to the server
-            $.ajax({
-                    type: 'POST',
-                    url: 'http://example.com/storeauthcode',
-                // Always include an `X-Requested-With` header in every AJAX request,
-                // to protect against CSRF attacks.
-                headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            contentType: 'application/octet-stream; charset=utf-8',
-                success: function(result) {
-                // Handle or verify the server response.
-            },      processData: false,
-                data: authResult['code']
-        });
-        } else {
-            // There was an error.
-        }}
-</script>
 </body>
 
 </html>

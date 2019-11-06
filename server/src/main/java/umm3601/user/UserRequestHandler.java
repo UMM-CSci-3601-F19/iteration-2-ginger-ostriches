@@ -3,6 +3,16 @@ package umm3601.user;
 import org.bson.Document;
 import spark.Request;
 import spark.Response;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import org.bson.Document;
+import spark.Request;
+import spark.Response;
+import umm3601.GoogleAuth;
+import umm3601.Server;
+import umm3601.user.UserController;
 
 /**
  * Created by Brian on 11/29/2017.
@@ -10,9 +20,11 @@ import spark.Response;
 public class UserRequestHandler {
 
   private final UserController userController;
+  private final GoogleAuth gauth;
 
-  public UserRequestHandler(UserController userController) {
+  public UserRequestHandler(UserController userController, GoogleAuth gauth) {
     this.userController = userController;
+    this.gauth = gauth;
   }
 
   /**
@@ -85,4 +97,5 @@ public class UserRequestHandler {
     System.err.println("Adding new user [name=" + name + ", age=" + age + " company=" + company + " email=" + email + ']');
     return userController.addNewUser(String userId, String email, String fullName, String pictureUrl, String lastName, String firstName);
   }*/
+
 }

@@ -4,12 +4,13 @@ import {Machine} from './machine';
 import {Observable} from 'rxjs';
 import {HomeService} from './home.service';
 import {AppService} from '../app.service';
+import {AuthService} from '../auth.service';
 
+  declare let gapi: any;
 
 @Component({
   templateUrl: 'home.component.html',
   styleUrls: ['./home.component.css'],
-  providers: [AppService]
 })
 
 export class HomeComponent implements OnInit {
@@ -37,11 +38,13 @@ export class HomeComponent implements OnInit {
   public roomId: string;
   public roomName: string;
   public selectorState: number;
-  appService: AppService;
+  public auth: AuthService;
 
-  constructor(public homeService: HomeService) {
+  constructor(public homeService: HomeService,
+  private authService: AuthService) {
     this.machineListTitle = 'available within all rooms';
     this.brokenMachineListTitle = 'Unavailable machines within all rooms';
+    this.auth = authService;
   }
 
   setSelector(state: number) {
@@ -120,6 +123,10 @@ export class HomeComponent implements OnInit {
         this.updateTime();
       }
     }) ();
+    this.initGapi();
+  }
+  initGapi(): void {
+    this.authService.loadClient();
   }
 
   delay(ms: number) {

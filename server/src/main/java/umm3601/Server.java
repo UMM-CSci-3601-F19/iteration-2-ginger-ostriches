@@ -6,6 +6,8 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 import spark.utils.IOUtils;
+import umm3601.admin.AdminController;
+import umm3601.admin.AdminRequestHandler;
 import umm3601.laundry.LaundryController;
 import umm3601.laundry.LaundryRequestHandler;
 import umm3601.user.UserController;
@@ -14,6 +16,7 @@ import umm3601.user.UserRequestHandler;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 
 
 
@@ -30,6 +33,7 @@ import org.json.*;
 
 public class Server {
   private static final String userDatabaseName = "dev";
+  private static final String adminDatabaseName = "dev";
   private static final String machineDatabaseName = "dev";
   private static final String machinePollingDatabaseName = "dev";
   private static final String roomDatabaseName = "dev";
@@ -39,13 +43,18 @@ public class Server {
 
     MongoClient mongoClient = new MongoClient();
     MongoDatabase userDatabase = mongoClient.getDatabase(userDatabaseName);
+    MongoDatabase adminDatabase = mongoClient.getDatabase(adminDatabaseName);
     MongoDatabase machineDatabase = mongoClient.getDatabase(machineDatabaseName);
     MongoDatabase machinePollingDatabase = mongoClient.getDatabase(machinePollingDatabaseName);
     MongoDatabase roomDatabase = mongoClient.getDatabase(roomDatabaseName);
 
+    GoogleAuth gauth = new GoogleAuth(userDatabase);
+
     PollingService pollingService = new PollingService(mongoClient);
     UserController userController = new UserController(userDatabase);
-    UserRequestHandler userRequestHandler = new UserRequestHandler(userController);
+    UserRequestHandler userRequestHandler = new UserRequestHandler(userController, gauth);
+    AdminController adminController = new AdminController(adminDatabase);
+    AdminRequestHandler adminRequestHandler = new AdminRequestHandler(adminController, gauth);
     LaundryController laundryController = new LaundryController(machineDatabase, roomDatabase, machinePollingDatabase);
     LaundryRequestHandler laundryRequestHandler = new LaundryRequestHandler(laundryController);
 
@@ -104,6 +113,9 @@ public class Server {
     get("api/users", userRequestHandler::getUsers);
     get("api/users/:id", userRequestHandler::getUserJSON);
 
+    get("api/admin", adminRequestHandler::getAdmins);
+    get("api/admin/:id", adminRequestHandler::getAdminJSON);
+
     // An example of throwing an unhandled exception so you can see how the
     // Java Spark debugger displays errors like this.
     get("api/error", (req, res) -> {
@@ -119,9 +131,9 @@ public class Server {
 
 
 
-    post("api/login", (req, res) -> {
+    post("api/login", adminRequestHandler::login);
 
-      JSONObject obj = new JSONObject(req.body());
+      /*JSONObject obj = new JSONObject(req.body());
       String authCode = obj.getString("code");
 
       try {
@@ -144,7 +156,7 @@ public class Server {
             // Replace clientSecret with the localhost one if testing
             clientSecrets.getDetails().getClientSecret(),
             authCode,
-            "http://localhost:9000")
+            "http://localhost:9000/")
             //Not sure if we have a redirectUri
 
             // Specify the same redirect URI that you use with your web
@@ -185,7 +197,7 @@ public class Server {
 
       return "";
 
-    });
+    });*/
     get("api/error", (req, res) -> {
       throw new RuntimeException("A demonstration error");
     });
