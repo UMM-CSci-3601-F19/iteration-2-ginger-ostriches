@@ -8,6 +8,7 @@ import {AuthService} from '../auth.service';
   declare let gapi: any;
 
 @Component({
+  selector: 'home.component',
   templateUrl: 'home.component.html',
   styleUrls: ['./home.component.css'],
 })
