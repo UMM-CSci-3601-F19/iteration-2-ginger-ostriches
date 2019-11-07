@@ -84,7 +84,7 @@ public class UserRequestHandler {
    * @param res the HTTP response
    * @return a boolean as whether the user was added successfully or not
    */
-  /*public String addNewUser(Request req, Response res) {
+  public String addNewUser(Request req, Response res) {
     res.type("application/json");
 
     Document newUser = Document.parse(req.body());
@@ -96,6 +96,6 @@ public class UserRequestHandler {
 
     System.err.println("Adding new user [name=" + name + ", age=" + age + " company=" + company + " email=" + email + ']');
     return userController.addNewUser(String userId, String email, String fullName, String pictureUrl, String lastName, String firstName);
-  }*/
+  }
 
 }

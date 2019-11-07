@@ -28,6 +28,7 @@
     "@types/core-js": "^2.5.0",
     "core-js": "^2.6.5",
     "hammerjs": "^2.0.8",
+    "java": "^0.11.1",
     "package.json": "^2.0.1",
     "rxjs": "^6.5.2",
     "rxjs-compat": "^6.0.0-rc.0",

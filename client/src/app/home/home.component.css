@@ -24,10 +24,14 @@
   box-shadow: unset;
 }
 
-.home a {
+.url {
   position: relative;
-  top: -100px;
+  top: -80px;
   z-index: 2;
 }
 
-
+.g-signin2 {
+  position: relative;
+  top: -95px;
+  z-index: 2;
+  margin-left: 1100px;}
