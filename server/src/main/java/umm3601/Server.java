@@ -6,19 +6,34 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 import spark.utils.IOUtils;
+import umm3601.admin.AdminController;
+import umm3601.admin.AdminRequestHandler;
 import umm3601.laundry.LaundryController;
 import umm3601.laundry.LaundryRequestHandler;
 import umm3601.user.UserController;
 import umm3601.user.UserRequestHandler;
 
-import static spark.Spark.*;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.Collections;
+
+
+
+import static spark.Spark.*;
+
+
+
+
+
+import com.google.api.client.googleapis.auth.oauth2.*;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import org.json.*;
 
 public class Server {
   private static final String userDatabaseName = "dev";
+  private static final String adminDatabaseName = "dev";
   private static final String machineDatabaseName = "dev";
   private static final String machinePollingDatabaseName = "dev";
   private static final String roomDatabaseName = "dev";
@@ -28,22 +43,20 @@ public class Server {
 
     MongoClient mongoClient = new MongoClient();
     MongoDatabase userDatabase = mongoClient.getDatabase(userDatabaseName);
+    MongoDatabase adminDatabase = mongoClient.getDatabase(adminDatabaseName);
     MongoDatabase machineDatabase = mongoClient.getDatabase(machineDatabaseName);
     MongoDatabase machinePollingDatabase = mongoClient.getDatabase(machinePollingDatabaseName);
     MongoDatabase roomDatabase = mongoClient.getDatabase(roomDatabaseName);
 
+    GoogleAuth gauth = new GoogleAuth(userDatabase);
+
+    PollingService pollingService = new PollingService(mongoClient);
     UserController userController = new UserController(userDatabase);
-    UserRequestHandler userRequestHandler = new UserRequestHandler(userController);
+    UserRequestHandler userRequestHandler = new UserRequestHandler(userController, gauth);
+    AdminController adminController = new AdminController(adminDatabase);
+    AdminRequestHandler adminRequestHandler = new AdminRequestHandler(adminController, gauth);
     LaundryController laundryController = new LaundryController(machineDatabase, roomDatabase, machinePollingDatabase);
     LaundryRequestHandler laundryRequestHandler = new LaundryRequestHandler(laundryController);
-
-    final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    executorService.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        pollFromServer(mongoClient, laundryController);
-      }
-    }, 0, 1, TimeUnit.MINUTES);
 
     //Configure Spark
     port(serverPort);
@@ -76,6 +89,12 @@ public class Server {
       return IOUtils.toString(stream);
     };
 
+    Route notFoundRoute = (req, res) -> {
+      res.type("text");
+      res.status(404);
+      return "Sorry, we couldn't find that!";
+    };
+
     get("/", clientRoute);
 
     /// Endpoints ///////////////////////////////
@@ -93,7 +112,9 @@ public class Server {
 
     get("api/users", userRequestHandler::getUsers);
     get("api/users/:id", userRequestHandler::getUserJSON);
-    post("api/users/new", userRequestHandler::addNewUser);
+
+    get("api/admin", adminRequestHandler::getAdmins);
+    get("api/admin/:id", adminRequestHandler::getAdminJSON);
 
     // An example of throwing an unhandled exception so you can see how the
     // Java Spark debugger displays errors like this.
@@ -106,9 +127,93 @@ public class Server {
     // in their request that they can accept compressed responses.
     // There's a similar "before" method that can be used to modify requests
     // before they they're processed by things like `get`.
+
+
+
+
+    post("api/login", adminRequestHandler::login);
+
+      /*JSONObject obj = new JSONObject(req.body());
+      String authCode = obj.getString("code");
+
+      try {
+
+        String CLIENT_SECRET_FILE = "./src/main/java/umm3601/server_files/credentials.json";
+
+
+        GoogleClientSecrets clientSecrets =
+          GoogleClientSecrets.load(
+            JacksonFactory.getDefaultInstance(), new FileReader(CLIENT_SECRET_FILE));
+
+
+        GoogleTokenResponse tokenResponse =
+          new GoogleAuthorizationCodeTokenRequest(
+            new NetHttpTransport(),
+            JacksonFactory.getDefaultInstance(),
+            "https://oauth2.googleapis.com/token",
+            clientSecrets.getDetails().getClientId(),
+
+            // Replace clientSecret with the localhost one if testing
+            clientSecrets.getDetails().getClientSecret(),
+            authCode,
+            "http://localhost:9000/")
+            //Not sure if we have a redirectUri
+
+            // Specify the same redirect URI that you use with your web
+            // app. If you don't have a web version of your app, you can
+            // specify an empty string.
+            .execute();
+
+
+        // Get profile info from ID token
+        GoogleIdToken idToken = tokenResponse.parseIdToken();
+        GoogleIdToken.Payload payload = idToken.getPayload();
+        String userId = payload.getSubject();     // Use this value as a key to identify a user.
+        String email = payload.getEmail();
+        boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+        String name = (String) payload.get("name");
+        String pictureUrl = (String) payload.get("picture");
+        String locale = (String) payload.get("locale");
+        String familyName = (String) payload.get("family_name");
+        String givenName = (String) payload.get("given_name");
+
+        // Debugging Code
+        System.out.println("---------------------------");
+        System.out.println("UserID is " + userId);
+        System.out.println("Email is " + email);
+        System.out.println("Is Email verified? " + emailVerified);
+        System.out.println("Name is " + name);
+        System.out.println("Picture Url is " + pictureUrl);
+        System.out.println("Locale is " + locale);
+        System.out.println("familyName is " + familyName);
+        System.out.println("givenName is " + givenName);
+        System.out.println("---------------------------");
+
+        return userController.addNewUser(userId, email, name, pictureUrl, familyName, givenName);
+
+      } catch (Exception e) {
+        System.out.println(e);
+      }
+
+      return "";
+
+    });*/
+    get("api/error", (req, res) -> {
+      throw new RuntimeException("A demonstration error");
+    });
+
+    // Called after each request to insert the GZIP header into the response.
+    // This causes the response to be compressed _if_ the client specified
+    // in their request that they can accept compressed responses.
+    // There's a similar "before" method that can be used to modify requests
+    // before they they're processed by things like `get`.
     after("*", Server::addGzipHeader);
 
+
+    get("api/*", notFoundRoute);
+
     get("/*", clientRoute);
+
 
     // Handle "404" file not found requests:
     notFound((req, res) -> {
@@ -117,17 +222,6 @@ public class Server {
       return "Sorry, we couldn't find that!";
     });
   }
-
-  private static void pollFromServer(MongoClient mongoClient, LaundryController laundryController) {
-
-    if (mongoClient.getDatabase(machineDatabaseName).getCollection("machineDataFromPollingAPI").countDocuments() == 0) {
-      PollingService pollingService = new PollingService(mongoClient);
-    } else {
-      laundryController.updateMachines();
-    }
-    //mongoClient.dropDatabase(machineDatabaseName);
-  }
-
 
   // Enable GZIP for all responses
   private static void addGzipHeader(Request request, Response response) {
