@@ -27,13 +27,13 @@ public class Server {
   public static void main(String[] args) {
 
     MongoClient mongoClient = new MongoClient();
-    MongoDatabase userDatabase = mongoClient.getDatabase(userDatabaseName);
+    //MongoDatabase userDatabase = mongoClient.getDatabase(userDatabaseName);
     MongoDatabase machineDatabase = mongoClient.getDatabase(machineDatabaseName);
     MongoDatabase machinePollingDatabase = mongoClient.getDatabase(machinePollingDatabaseName);
     MongoDatabase roomDatabase = mongoClient.getDatabase(roomDatabaseName);
 
-    UserController userController = new UserController(userDatabase);
-    UserRequestHandler userRequestHandler = new UserRequestHandler(userController);
+    //UserController userController = new UserController(userDatabase);
+    //UserRequestHandler userRequestHandler = new UserRequestHandler(userController);
     LaundryController laundryController = new LaundryController(machineDatabase, roomDatabase, machinePollingDatabase);
     LaundryRequestHandler laundryRequestHandler = new LaundryRequestHandler(laundryController);
 
@@ -91,9 +91,9 @@ public class Server {
 
     // List users, filtered using query parameters
 
-    get("api/users", userRequestHandler::getUsers);
-    get("api/users/:id", userRequestHandler::getUserJSON);
-    post("api/users/new", userRequestHandler::addNewUser);
+    //get("api/users", userRequestHandler::getUsers);
+   // get("api/users/:id", userRequestHandler::getUserJSON);
+    //post("api/users/new", userRequestHandler::addNewUser);
 
     // An example of throwing an unhandled exception so you can see how the
     // Java Spark debugger displays errors like this.
