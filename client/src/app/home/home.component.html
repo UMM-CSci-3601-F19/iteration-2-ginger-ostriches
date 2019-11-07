@@ -7,8 +7,6 @@
     <button id="signIn" class="g-signin2" data-onsuccess="onSignIn" *ngIf="!auth.isSignedIn()" (click)="auth.signIn()"></button>
     <button mat-raised-button id="signOut" *ngIf="auth.isSignedIn()" (click)="auth.signOut()">Sign out</button>
 
-    <button id="signIn" class="g-signin2" *ngIf="!auth.isSignedIn()" (click)="auth.signIn()"></button>
-
 
     <mat-expansion-panel [expanded]="selectorState === 0" (opened)="setSelector(0)">
 
