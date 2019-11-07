@@ -22,15 +22,17 @@ export class AuthService implements CanActivate, OnInit {
   private http: HttpClient;
   private signedInFlag: boolean;
 
+
   constructor(private client: HttpClient, public router: Router) {
     this.http = client;
+    this.signedInFlag = false;
   }
 
-  getUserName(): string {
+  getAdminName(): string {
     return gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getName();
   }
 
-  getUserId(): string {
+  getAdminId(): string {
     return gapi.auth2.getAuthInstance().currentUser.get().getId();
   }
 

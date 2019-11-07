@@ -13,8 +13,6 @@ import {APP_BASE_HREF} from '@angular/common';
 import {CustomModule} from './custom.module';
 import {AddUserComponent} from './users/add-user.component';
 import {MatGridListModule} from '@angular/material/grid-list';
-import {AppService} from './app.service';
-import {AppAuthGuard} from './app.authGuard';
 import {AuthService} from './auth.service';
 
 // import {ScrollDispatchModule} from '@angular/cdk/scrolling';

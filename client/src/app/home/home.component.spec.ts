@@ -7,6 +7,7 @@ import {HomeService} from './home.service';
 import {Machine} from './machine';
 import {Room} from './room';
 import {Observable} from 'rxjs';
+import {AuthService} from '../auth.service';
 
 describe('Home page', () => {
 
@@ -26,6 +27,12 @@ describe('Home page', () => {
     getMachines: () => Observable<Machine[]>;
     updateRunningStatus;
   };
+  let authServiceStub: {
+    getAdminId: () => String,
+    getAdminName: () => String,
+    isSignedIn: () => boolean,
+    loadClient: () => null;
+  };
 
   // @ts-ignore
   beforeEach(() => {
@@ -38,8 +45,8 @@ describe('Home page', () => {
         room_id: 'room_a',
         type: 'washer',
         position: {
-          x:0,
-          y:0
+          x: 0,
+          y: 0
         },
 
         remainingTime: -1,
@@ -52,8 +59,8 @@ describe('Home page', () => {
         room_id: 'room_b',
         type: 'dryer',
         position: {
-          x:0,
-          y:0
+          x: 0,
+          y: 0
         },
 
         remainingTime: 10,
@@ -74,11 +81,19 @@ describe('Home page', () => {
       }, ]),
       updateRunningStatus: () => null,
     };
+    authServiceStub = {
+      getAdminId: () => 'MI6007',
+      getAdminName: () => 'James Bond',
+      isSignedIn: () => true,
+      loadClient: () => null,
+    };
+
 
     TestBed.configureTestingModule({
       imports: [CustomModule],
       declarations: [HomeComponent], // declare the test component
-      providers: [{provide: HomeService, useValue: homeServiceStub}]
+      providers: [{provide: HomeService, useValue: homeServiceStub},
+        {provide: AuthService, useValue: authServiceStub }]
     });
 
     fixture = TestBed.createComponent(HomeComponent);

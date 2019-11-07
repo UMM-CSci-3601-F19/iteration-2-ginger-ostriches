@@ -3,7 +3,6 @@ import {Room} from './room';
 import {Machine} from './machine';
 import {Observable} from 'rxjs';
 import {HomeService} from './home.service';
-import {AppService} from '../app.service';
 import {AuthService} from '../auth.service';
 
   declare let gapi: any;
