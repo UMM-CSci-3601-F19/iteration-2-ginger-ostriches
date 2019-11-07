@@ -4,7 +4,7 @@
 
 <!--<div class="g-signin2" data-onsuccess="onSignIn"></div>-->
 
-    <button id="signIn" *ngIf="!auth.isSignedIn()" (click)="auth.signIn()"></button>
+    <button id="signIn" class="g-signin2" *ngIf="!auth.isSignedIn()" (click)="auth.signIn()"></button>
 
     <mat-expansion-panel [expanded]="selectorState === 0" (opened)="setSelector(0)">
 
