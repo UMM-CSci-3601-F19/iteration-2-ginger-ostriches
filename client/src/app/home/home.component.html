@@ -52,7 +52,7 @@
                 <div class="visualBox"> </div>
                 <mat-panel-title matTooltip="Running: {{machine.running}}" style="color:green">
                   <mat-icon>local_laundry_service</mat-icon>
-                  This {{machine.type}} has been vacant for {{machine.vacantTime}} minutes.
+                  This {{machine.type}}, {{machine.name}}, has been vacant for {{machine.vacantTime}} minutes.
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <mat-panel-description>Status: {{machine.status}}</mat-panel-description>
@@ -72,7 +72,7 @@
                 <div class="visualBox"> </div>
                 <mat-panel-title matTooltip="Running: {{machine.running}}" style="color:darkorange">
                   <mat-icon>local_laundry_service</mat-icon>
-                  This {{machine.type}} will be vacant in {{machine.remainingTime}} minutes.
+                  This {{machine.type}}, {{machine.name}}, will be vacant in {{machine.remainingTime}} minutes.
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <mat-panel-description>Status: {{machine.status}}</mat-panel-description>
@@ -96,7 +96,7 @@
                 <div class="visualBox"> </div>
                 <mat-panel-title matTooltip="Running: {{machine.running}}" style="color:green">
                   <mat-icon>fireplace</mat-icon>
-                  This {{machine.type}} has been vacant for {{machine.vacantTime}} minutes.
+                  This {{machine.type}}, {{machine.name}}, has been vacant for {{machine.vacantTime}} minutes.
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <mat-panel-description>Status: {{machine.status}}</mat-panel-description>
@@ -114,7 +114,7 @@
                 <div class="visualBox"> </div>
                 <mat-panel-title matTooltip="Running: {{machine.running}}" style="color:darkorange">
                   <mat-icon>fireplace</mat-icon>
-                  This {{machine.type}} will be vacant in {{machine.remainingTime}} minutes.
+                  This {{machine.type}}, {{machine.name}}, will be vacant in {{machine.remainingTime}} minutes.
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <mat-panel-description>Status: {{machine.status}}</mat-panel-description>
@@ -137,7 +137,7 @@
                 <div class="visualBox"> </div>
                 <mat-panel-title matTooltip="Running: {{machine.running}}" style="font-style: italic; color: gray">
                   <mat-icon>local_laundry_service</mat-icon>
-                  {{machine.type}}</mat-panel-title>
+                  This {{machine.type}}, {{machine.name}}, is currently broken</mat-panel-title>
               </mat-expansion-panel-header>
 
               <mat-panel-description>Status: {{machine.status}}</mat-panel-description>
@@ -155,7 +155,7 @@
                 <div class="visualBox"> </div>
                 <mat-panel-title matTooltip="Running: {{machine.running}}" style="font-style: italic; color: gray">
                   <mat-icon>fireplace</mat-icon>
-                  {{machine.type}}</mat-panel-title>
+                  This {{machine.type}}, {{machine.name}}, is currently broken</mat-panel-title>
               </mat-expansion-panel-header>
 
               <mat-panel-description>Status: {{machine.status}}</mat-panel-description>
