@@ -132,7 +132,7 @@ public class UserControllerSpec {
 
   }
 
-  @Test
+  /*@Test
   public void addUserTest() {
     String newId = userController.addNewUser("Brian", 22, "umm", "brian@yahoo.com");
 
@@ -148,7 +148,7 @@ public class UserControllerSpec {
       .sorted()
       .collect(Collectors.toList());
     assertEquals("Should return name of new user", "Brian", name.get(0));
-  }
+  }*/
 
   @Test
   public void getUserByCompany() {
