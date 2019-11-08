@@ -24,10 +24,4 @@
   box-shadow: unset;
 }
 
-.home a {
-  position: relative;
-  top: -100px;
-  z-index: 2;
-}
-
 
