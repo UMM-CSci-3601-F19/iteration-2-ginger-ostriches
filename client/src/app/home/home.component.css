@@ -24,14 +24,37 @@
   box-shadow: unset;
 }
 
-.url {
+.machine-link {
   position: relative;
-  top: -80px;
+  top: -50px;
   z-index: 2;
+}
+
+.machine-link:active {
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  border-bottom: none;
+}
+
+.machine-link a {
+  color: black;
+  text-decoration: none;
+  font-size: 18px;
 }
 
 .g-signin2 {
   position: relative;
-  top: -95px;
+  top: -100px;
   z-index: 2;
-  margin-left: 1100px;}
+  margin-left: 1100px;
+}
+
+.url {
+  display: inline-block;
+  padding: 10px;
+  text-decoration: none;
+  background: white;
+  color: black;
+  border-bottom: solid 6px lightgray;
+  border-radius: 3px;
+}
